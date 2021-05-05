@@ -13,9 +13,9 @@ const server=http.createServer((req,res)=>{
             res.end()
         }else{
         ///data respond olarak gonder
-           res.write(data);
+        //    res.write(data);
            ///respondu sonlandir
-           res.end()
+           res.end(data)
         }
     })
 
