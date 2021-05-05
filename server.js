@@ -2,8 +2,9 @@ const http=require('http')
 const server=http.createServer((req,res)=>{
     console.log(req.url,req.method);
     ////set header content type
-    res.setHeader('Content-Type','text/plain');///res type
-    res.write('hello,ninjas');///res icerik
+    res.setHeader('Content-Type','html');///res type
+    res.write('<p>hello,ninjas</p>');///res icerik
+    res.write('<p>hello,ninjas 2</p>');///res icerik
     res.end()    //end res
 
 })
