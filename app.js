@@ -21,15 +21,6 @@ mongoose.connect(dbURI,{useNewUrlParser:true,useUnifiedTopology:true})
 ///register view engine
 app.set('view engine','ejs')
 
-///Simdi bu yuzden sonra express diger requestlere bakmayacak
-// app.use((req,res,next)=>{
-//     console.log('new request made:');
-//     console.log('host: ', req.hostname);
-//     console.log('path: ', req.path);
-//     console.log('method: ', req.method);
-//     //next ile ben asagidaki requestlere bakabilrim ama olmasaydi asagiya inmezdi
-//     next()
-// })
 
 ///middleware&& static files
 ///bundan sonra public folder icinde ki hersey browserdan ulasilabilecceck espress.static sayesinde
@@ -38,63 +29,16 @@ app.use(express.static('public'))
 app.use(morgan('dev'))
 
 
-///mongoose and mongo sandbox routes
 
-///add to database
-app.get('/add-blog',(req,res)=>{
-const blog=new Blog({
-    title:'new blog 2',
-    snippet:'about my new blog',
-    body:'more about my blog'
-})
-///to save this method
-blog.save()
-.then((result)=>{
-    res.send(result)
-})
-.catch((err)=>{
-    res.send(result)
-})
-
-})
-///get all the blogs
-app.get('/all-blogs',(req,res)=>{
-    //find method
-    Blog.find()
-    .then(result=>{
-        res.send(result)
-    })
-    .catch((err)=>{
-        console.log(err)
-    })
-})
-
-//get single blog
-app.get('/single-blog',(req,res)=>{
-    //use this method
-    Blog.findById("609bcec63b649647aac83ff9")
-    .then((result)=>{
-        res.send(result)
-    })
-    .catch((err)=>console.log(err))
-})
 
 app.get('/',(req,res)=>{
-    const blogs = [
-        {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-        {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-        {title: 'How to defeat bowser', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-      ];
- res.render('index',{title:'Home',blogs})
+    res.redirect('/blogs')
+ 
  
 })
 
 
-// app.use((req,res,next)=>{
-//     console.log('another request made:');
-//     next()
-  
-// })
+
 
 
 app.get('/about',(req,res)=>{
@@ -102,6 +46,14 @@ app.get('/about',(req,res)=>{
     res.render('about',{title:req.url.slice(1)})
     
    })
+
+  app.get('/blogs',(req,res)=>{
+    Blog.find().sort({createdAt:-1})
+    .then((result)=>{
+        res.render('index',{title:'home',blogs:result})
+    })
+    .catch((err)=>{console.log(err)})
+  }) 
 
    app.get('/blogs/create',(req,res)=>{
        res.render('create',{title:req.url.slice(-6)})
